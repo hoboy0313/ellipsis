@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Example</title>
+
+    <style>
+        body {
+            padding: 0 20px;
+        }
+
+        section > div {
+            background: pink;
+            height: 100px;
+            color: darkcyan;
+        }
+
+        section > div + div{
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <section style="width: 100%;">
+        <div id="ellipsis1" style="line-height: 18px">
+            css 单行折叠。
+        </div>
+<!--        无奈撒打算打算大啊啊的啊的啊多少啊无奈撒打算打算大啊啊的啊的啊多少啊无奈撒打算打算大啊啊的啊的啊多少啊-->
+<!--        <div id="ellipsis2">-->
+<!--            css 多行折叠。无奈撒打算打算大啊啊的啊的啊多少啊无奈撒打算打算大啊啊的啊的啊多少啊无奈撒打算打算大啊啊的啊的啊多少啊-->
+<!--        </div>-->
+    </section>
+    <script src="../lib/index.umd.js"></script>
+    <script>
+        const {MeasureContainer} = window.ellipsis
+
+        const instance = new MeasureContainer({
+            target: document.querySelector('#ellipsis1'),
+            rows: 2,
+            ellipsisSymbol: '...',
+        })
+
+        instance.render();
+
+        // const content2 = createEllipsis({
+        //     el: document.querySelector('#ellipsis2'),
+        //     rows: 2,
+        // })
+    </script>
+</body>
+</html>
