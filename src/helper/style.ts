@@ -62,7 +62,7 @@ export const fakerContainerStyle = {
 };
 
 export const devStyle = {
-    top: '0',
+    top: '200px',
     'z-index': '10',
     visibility: 'visible',
 };

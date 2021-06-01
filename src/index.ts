@@ -1,8 +1,8 @@
-export * from './MeasureContainer';
+import {MeasureContainer, MeasureOptions} from './MeasureContainer';
 
 import {isDOM} from './helper/dom';
 
-interface EllipsisOptions {
+interface EllipsisOptions extends Omit<MeasureOptions, 'target'> {
     target: string | HTMLElement;
 
     rows?: number;
@@ -36,7 +36,7 @@ const defaultOptions: Required<Pick<EllipsisOptions, 'rows' | 'useCss' | 'ellips
     ellipsisSymbol: '...',
 };
 
-export function createEllipsis(options: EllipsisOptions): EllipsisContent {
+function createEllipsis(options: EllipsisOptions): EllipsisContent {
     let target = options.target || null;
 
     if (typeof target === 'string') {
@@ -47,10 +47,21 @@ export function createEllipsis(options: EllipsisOptions): EllipsisContent {
         throw new TypeError('The `options.el` cannot be find, please provide a exist DOM.');
     }
 
-    const {useCss, rows, ellipsisSymbol} = {...defaultOptions, ...options};
+    const mergeOptions = {...defaultOptions, ...options, target};
+
+    const instance = new MeasureContainer(mergeOptions);
+
+    const result = instance.measure();
+
+    console.log('result:', result);
 
     return {
         isEllipsis: true,
         content: '1',
     };
 }
+
+export {
+    createEllipsis,
+    MeasureContainer,
+};

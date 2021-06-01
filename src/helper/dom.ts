@@ -1,22 +1,22 @@
 import {forEach} from '../utils';
 
 // We only handle element & text node.
-export const ELEMENT_NODE = 1;
-export const TEXT_NODE = 3;
-
-export const cloneNodeTypes = [ELEMENT_NODE, TEXT_NODE];
+enum DEAL_NODE_TYPE {
+    ELEMENT_NODE = 1,
+    TEXT_NODE = 3,
+}
 
 /**
  * @function To check whether it's a DOM.
  */
-export const isDOM = (() => {
+const isDOM = (() => {
     const hasHtmlElement = typeof HTMLElement === 'object';
 
     if (hasHtmlElement) {
         return (dom: Element) => dom instanceof HTMLElement;
     }
 
-    return (dom: Element) => dom && typeof dom === 'object' && dom.nodeType === ELEMENT_NODE;
+    return (dom: Element) => dom && typeof dom === 'object' && dom.nodeType === DEAL_NODE_TYPE.ELEMENT_NODE;
 })();
 
 /**
@@ -26,7 +26,7 @@ export const isDOM = (() => {
  * @param {Record<string, string | number>} attrs tag's attributes.
  */
 // eslint-disable-next-line max-params
-export function createContainer(
+function createContainer(
     component = 'div',
     container = document.body,
     attrs: Record<string, string | number> = {},
@@ -41,3 +41,11 @@ export function createContainer(
     container.appendChild(el);
     return el;
 }
+
+export {
+    DEAL_NODE_TYPE,
+
+    isDOM,
+
+    createContainer,
+};
