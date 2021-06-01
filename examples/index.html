@@ -25,9 +25,7 @@
 </head>
 <body>
     <section style="width: 100%;">
-        <div id="ellipsis1" style="line-height: 18px">
-            css 单行折叠。
-        </div>
+        <div id="ellipsis1" style="line-height: 18px"></div>
 <!--        无奈撒打算打算大啊啊的啊的啊多少啊无奈撒打算打算大啊啊的啊的啊多少啊无奈撒打算打算大啊啊的啊的啊多少啊-->
 <!--        <div id="ellipsis2">-->
 <!--            css 多行折叠。无奈撒打算打算大啊啊的啊的啊多少啊无奈撒打算打算大啊啊的啊的啊多少啊无奈撒打算打算大啊啊的啊的啊多少啊-->
@@ -41,6 +39,7 @@
             target: document.querySelector('#ellipsis1'),
             rows: 2,
             ellipsisSymbol: '...',
+            contentNodeStr: 'css 单行折叠。无奈撒打算打算大啊啊的啊的啊多少啊无奈撒打算打算大啊啊的啊的啊多少啊无奈撒打算打算大啊啊的啊的啊多少啊'
         })
 
         instance.render();

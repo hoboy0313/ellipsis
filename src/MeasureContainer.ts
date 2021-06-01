@@ -1,4 +1,4 @@
-import {cloneNodeTypes, createContainer, TEXT_NODE, ELEMENT_NODE} from './helper/dom';
+import {createContainer, cloneNodeTypes, TEXT_NODE, ELEMENT_NODE} from './helper/dom';
 import {devStyle, fakerContainerStyle, setStyle, checkStyle, mergeStyle, getMaxHeight} from './helper/style';
 
 import {forEach} from './utils';
@@ -16,28 +16,24 @@ export interface MeasureOptions {
      * @example `display: none;`
      */
     patchStyle?: Partial<CSSStyleDeclaration>;
+
+    contentNodeStr: string;
+
+    suffixNodeStr: string;
 }
 
-export interface IMeasureContainer extends MeasureOptions {
-    maxHeight: number;
-
-    ellipsisSymbolEle?: HTMLElement;
-}
-
-export class MeasureContainer implements IMeasureContainer{
+export class MeasureContainer{
+    target: HTMLElement;
+    // The container will be used to computed those contents that need be ellipsis.
     container: HTMLElement;
 
-    target: HTMLElement;
-
     styles: Partial<CSSStyleDeclaration>[] = [fakerContainerStyle];
-
-    maxHeight = 0;
 
     rows;
 
     ellipsisSymbol;
 
-    ellipsisSymbolEle;
+    maxHeight = 0;
 
     constructor(options: MeasureOptions) {
         const {
@@ -45,19 +41,27 @@ export class MeasureContainer implements IMeasureContainer{
             rows = 1,
             ellipsisSymbol = '...',
             patchStyle = {},
+            contentNodeStr = '',
+            suffixNodeStr = '',
         } = options;
 
         this.target = target;
         this.rows = rows;
         this.ellipsisSymbol = ellipsisSymbol;
-        this.container = createContainer();
-        this.ellipsisSymbolEle = createContainer('span', this.container, {});
-        this.ellipsisSymbolEle.appendChild(document.createTextNode(ellipsisSymbol));
-        // debugger;
-        this.styles.push(patchStyle);
-    }
 
-    init() {
+        this.container = createContainer();
+        // content container.
+        createContainer('span', this.container)
+            .innerHTML = contentNodeStr;
+        // ellipsis container.
+        createContainer('span', this.container)
+            .appendChild(document.createTextNode(ellipsisSymbol));
+        // suffix container.
+        createContainer('span', this.container)
+            .innerHTML = suffixNodeStr;
+
+        this.styles.push(patchStyle);
+
         const style = this.initStyle();
         // init maxHeight
         this.maxHeight = getMaxHeight(style, this.rows);
@@ -73,7 +77,6 @@ export class MeasureContainer implements IMeasureContainer{
         }
 
         if(!checkStyle(style, 'lineHeight')) {
-            console.log('a', style.lineHeight);
             console.warn(`The element's style property of 'lineHeight' is ${style.lineHeight}, it's could beyond expect to occur.
 Please explicit to setProperty of 'lineHeight'.`, this.target);
         }
@@ -82,26 +85,8 @@ Please explicit to setProperty of 'lineHeight'.`, this.target);
         return style;
     }
 
-    private cloneNode() {
-        const {target} = this;
-        const cloneNodes: Node[] = [];
-        forEach(target.childNodes, (node) => {
-            if (cloneNodeTypes.includes(node.nodeType)) {
-                cloneNodes.push(node.cloneNode(true));
-            }
-        });
-        return cloneNodes;
-    }
-
     private inRange() {
         return this.container.offsetHeight < this.maxHeight;
-    }
-
-    private appendChildNode(nodes: Node | Node[]) {
-        nodes = Array.isArray(nodes) ? nodes : [nodes];
-        forEach(nodes, (node) => {
-            this.container.insertBefore(node, this.ellipsisSymbolEle);
-        });
     }
 
     // eslint-disable-next-line max-params
@@ -135,26 +120,30 @@ Please explicit to setProperty of 'lineHeight'.`, this.target);
         if(nodeType === TEXT_NODE) {
             const fullText = node.textContent || '';
             const textNode = document.createTextNode(fullText);
-            this.appendChildNode(textNode);
             return this.measureText(textNode, fullText);
         }
     }
 
-    private measure(nodes: Node[]) {
-        this.appendChildNode(nodes);
-        if(this.inRange()) {
-            return nodes;
-        }
+    private cloneNode(parentNode: Node) {
+        const childNodes: Node[] = [];
+        forEach(parentNode.childNodes, (childNode) => {
+            if(cloneNodeTypes.includes(childNode.nodeType)) {
+                childNodes.push(childNode);
+            }
+        });
+        return childNodes;
+    }
 
-        nodes.some((node, index) => {
+
+    public measure() {
+        const contentNodes = this.cloneNode(this.container.childNodes[0]);
+        contentNodes.some((node, index) => {
             const content= this.measureNode(node, index);
             return !!content;
         });
     }
 
     public render() {
-        this.init();
-        const nodes = this.cloneNode();
-        this.measure(nodes);
+        this.measure();
     }
 }

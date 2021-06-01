@@ -25,3 +25,7 @@ export function forEach<T>(obj: any, callback: any) {
 export function pxToNumber(value: string): number {
     return parseFloat(value) || 0;
 }
+
+export function hyphenate(str: string) {
+    return str.replace(/([A-Z])/g, '-$1').toLowerCase();
+}
