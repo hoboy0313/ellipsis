@@ -1,7 +1,6 @@
 import typescript from '@rollup/plugin-typescript';
 import replace from '@rollup/plugin-replace';
 
-
 export default [
     {
         input: 'src/index.ts',

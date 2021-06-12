@@ -62,7 +62,10 @@ export const fakerContainerStyle = {
 };
 
 export const devStyle = {
-    top: '0',
+    top: 'initial',
+    bottom: '0',
+    left: 'initial',
+    right: '0',
     'z-index': '10',
     visibility: 'visible',
 };
@@ -90,7 +93,7 @@ export const getCssStyle = (rows: number) => {
 
 export const setStyle = (el: HTMLElement, style: Partial<CSSStyleDeclaration>) => {
     forEach(style, (value, key) => {
-        el.style.setProperty(key as string, value);
+        el.style.setProperty(key as string, value as string);
     });
 };
 
@@ -118,7 +121,7 @@ export const checkStyle = (style: CSSStyleDeclaration, styleName: 'width' | 'lin
  * @function merge style.
  * @param {Partial<CSSStyleDeclaration>[]} styles
  */
-export const mergeStyle = (...styles: Array<Partial<CSSStyleDeclaration> | Partial<CSSStyleDeclaration>[]>) => {
+export const mergeStyle = (...styles: Array<Partial<CSSStyleDeclaration> | Partial<CSSStyleDeclaration>[]>): CSSStyleDeclaration => {
     return Object.assign({}, ...(styles.flat(1)));
 };
 
