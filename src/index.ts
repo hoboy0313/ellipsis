@@ -1,58 +1,39 @@
-// export * from './MeasureContainer';
+import {isSupportCss, getStyle, setStyle} from './helper/style';
 
-export * from './measure';
+import {measure, MeasureOptions} from './measure';
 
-// import {isDOM} from './helper/dom';
-//
-// interface EllipsisOptions {
-//     target: string | HTMLElement;
-//
-//     rows?: number;
-//
-//     /**
-//      * provide a entry to adapter other scene.
-//      * @default {boolean} true
-//      */
-//     useCss?: boolean;
-//
-//     /**
-//      * The `ellipsis`
-//      * @default `...`
-//      */
-//     ellipsisSymbol?: string;
-//
-//     /**
-//      * @default undefined
-//      */
-//     suffix?: number | string;
-// }
-//
-// interface EllipsisContent {
-//     isEllipsis: boolean;
-//     content: string;
-// }
-//
-// const defaultOptions: Required<Pick<EllipsisOptions, 'rows' | 'useCss' | 'ellipsisSymbol'>> = {
-//     rows: 1,
-//     useCss: true,
-//     ellipsisSymbol: '...',
-// };
-//
-// export function createEllipsis(options: EllipsisOptions): EllipsisContent {
-//     let target = options.target || null;
-//
-//     if (typeof target === 'string') {
-//         target = document.querySelector<HTMLElement>(target);
-//     }
-//
-//     if (!target || !isDOM(target)) {
-//         throw new TypeError('The `options.el` cannot be find, please provide a exist DOM.');
-//     }
-//
-//     const {useCss, rows, ellipsisSymbol} = {...defaultOptions, ...options};
-//
-//     return {
-//         isEllipsis: true,
-//         content: '1',
-//     };
-// }
+interface MeasureResult {
+    isStyle: boolean;
+    style?: string | Partial<CSSStyleDeclaration>;
+}
+
+
+const defaultOptions: Partial<MeasureOptions> = {
+    rows: 2,
+    ellipsisSymbol: '...',
+};
+
+function ellipsis (options: MeasureOptions): MeasureResult{
+    const {target, rows, ellipsisSymbol} = {...defaultOptions, ...options};
+
+    if(isSupportCss(rows) && ellipsisSymbol === '...') {
+        console.log(2);
+        setStyle(target, getStyle(rows));
+
+        return {
+            isStyle: true,
+        };
+    }
+
+    console.log(1);
+
+    return {
+        isStyle: false,
+    };
+};
+
+export {
+    measure,
+    ellipsis,
+};
+

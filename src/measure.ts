@@ -1,7 +1,7 @@
 import {createContainer, appendChildren, cloneChildNodes, removeChildren, NODE_TYPE} from './helper/dom';
+import {devStyle, fakerContainerStyle, getMaxHeight, mergeStyle} from './helper/style';
 
 import {forEach} from './utils';
-import {devStyle, fakerContainerStyle, getMaxHeight, mergeStyle} from './helper/style';
 
 export interface MeasureOptions {
     container: HTMLElement;
@@ -17,26 +17,26 @@ export interface MeasureOptions {
      */
     patchStyle?: Partial<CSSStyleDeclaration>;
 
-    contentNodeStr: string;
+    content: string;
 
-    suffixNodeStr?: string;
+    suffix?: string;
 }
 
 const {TEXT_NODE, ELEMENT_NODE} = NODE_TYPE;
 
 const initContainer = (options: MeasureOptions) => {
-    const {contentNodeStr, ellipsisSymbol, suffixNodeStr} = options;
+    const {content, ellipsisSymbol, suffix} = options;
     const container = createContainer();
 
     // content container.
     const contentContainer = createContainer('span', container);
-    contentContainer.innerHTML = contentNodeStr;
+    contentContainer.innerHTML = content;
 
     // suffix container.
     const suffixContainer = createContainer('span', container);
 
-    if (suffixNodeStr) {
-        suffixContainer.innerHTML = suffixNodeStr;
+    if (suffix) {
+        suffixContainer.innerHTML = suffix;
     }
 
     if(ellipsisSymbol) {

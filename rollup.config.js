@@ -8,6 +8,7 @@ export default [
         output: {
             file: 'lib/index.js',
             format: 'cjs',
+            exports: 'named',
         },
 
         plugins: [
@@ -19,8 +20,9 @@ export default [
 
         output: {
             file: 'lib/index.umd.js',
-            name: 'ellipsis',
+            name: 'Ellipsis',
             format: 'umd',
+            exports: 'named',
         },
 
         plugins: [

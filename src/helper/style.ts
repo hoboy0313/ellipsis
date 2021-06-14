@@ -1,28 +1,6 @@
 import {forEach, pxToNumber} from '../utils';
 
 /**
- * @function To check whether it's supported from current browser.
- * @param {string | string[]} styleName current styleName.
- * @return {boolean}
- */
-export const isStyleSupport = (styleName: string | string[]): boolean => {
-    if (typeof window !== 'undefined' && window.document && window.document.documentElement) {
-        const styleNameList = Array.isArray(styleName) ? styleName : [styleName];
-        const {documentElement} = window.document;
-        return styleNameList.some(name => name in documentElement.style);
-    }
-    return false;
-};
-
-export const isLineClampSupport = isStyleSupport('webkitLineClamp');
-
-export const isTextOverflowSupport = isStyleSupport('textOverflow');
-
-export const canUseCss = (rows: number) => {
-    return rows === 1 ? isTextOverflowSupport : isLineClampSupport;
-};
-
-/**
  * @description
  * The reason I don't have to declare it using `CSSStyleDeclaration` is because
  * it reduces performance as a base function by reducing unnecessary conversions.
@@ -45,6 +23,28 @@ const lineClampStyle = (rows: number) => ({
     overflow: 'hidden',
     'word-break': 'break-all',
 });
+
+/**
+ * @function To check whether it's supported from current browser.
+ * @param {string | string[]} styleName current styleName.
+ * @return {boolean}
+ */
+export const isStyleSupport = (styleName: string | string[]): boolean => {
+    if (typeof window !== 'undefined' && window.document && window.document.documentElement) {
+        const styleNameList = Array.isArray(styleName) ? styleName : [styleName];
+        const {documentElement} = window.document;
+        return styleNameList.some(name => name in documentElement.style);
+    }
+    return false;
+};
+
+export const isLineClampSupport = isStyleSupport('webkitLineClamp');
+
+export const isTextOverflowSupport = isStyleSupport('textOverflow');
+
+export const isSupportCss = (rows: number) => {
+    return rows === 1 ? isTextOverflowSupport : isLineClampSupport;
+};
 
 // To be used at the fake container.
 export const fakerContainerStyle = {
@@ -85,10 +85,11 @@ export const styleObjectToStr = (styles: Record<string, string | number>) => {
 /**
  * @function get the css style about ellipsis.
  * @param {number} rows
+ * @param {boolean} isString It's determining to return styleObject or styleString.
  */
-export const getCssStyle = (rows: number) => {
+export const getStyle = (rows: number, isString = false) => {
     const styleObject = rows === 1 ? textOverStyle : lineClampStyle(rows);
-    return styleObjectToStr(styleObject);
+    return isString ? styleObjectToStr(styleObject) : styleObject;
 };
 
 export const setStyle = (el: HTMLElement, style: Partial<CSSStyleDeclaration>) => {
