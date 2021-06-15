@@ -2,35 +2,53 @@ import {isSupportCss, getStyle, setStyle} from './helper/style';
 
 import {measure, MeasureOptions} from './measure';
 
-interface MeasureResult {
-    isStyle: boolean;
-    style?: string | Partial<CSSStyleDeclaration>;
+interface EllipsisOptions extends Omit<MeasureOptions, 'target'> {
+    target: string | HTMLElement;
 }
-
 
 const defaultOptions: Partial<MeasureOptions> = {
     rows: 2,
     ellipsisSymbol: '...',
 };
 
-function ellipsis (options: MeasureOptions): MeasureResult{
-    const {target, rows, ellipsisSymbol} = {...defaultOptions, ...options};
+function ellipsis (ops: EllipsisOptions) {
+    const options = {...defaultOptions, ...ops};
 
-    if(isSupportCss(rows) && ellipsisSymbol === '...') {
-        console.log(2);
-        setStyle(target, getStyle(rows));
-
-        return {
-            isStyle: true,
-        };
+    if(!options.target) {
+        console.error(`[ellipsis] the options.target cannot '${options.target}'.`);
+        return;
     }
 
-    console.log(1);
+    if (typeof options.target === 'string') {
+        const ele = document.querySelector(options.target);
+        if(!ele) {
+            console.error('[ellipsis] the options.target must be an Element');
+            return;
+        }
 
-    return {
-        isStyle: false,
-    };
-};
+        options.target = ele as HTMLElement;
+    }
+
+    if(!options.content) {
+        options.content = options.target.innerHTML;
+    }
+
+    const {target, rows, ellipsisSymbol, suffix} = options;
+
+    if(isSupportCss(rows) && ellipsisSymbol === '...' && !suffix) {
+        setStyle(target, getStyle(rows));
+        return;
+    }
+
+    const {isEllipsis, text} = measure(options as MeasureOptions);
+
+    if (
+        isEllipsis ||
+        (!isEllipsis && !target.innerHTML)
+    ) {
+        target.innerHTML = text;
+    }
+}
 
 export {
     measure,

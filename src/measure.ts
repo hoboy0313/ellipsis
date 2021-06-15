@@ -22,6 +22,11 @@ export interface MeasureOptions {
     suffix?: string;
 }
 
+interface Result {
+    text: string;
+    isEllipsis: boolean;
+}
+
 const {TEXT_NODE, ELEMENT_NODE} = NODE_TYPE;
 
 const initContainer = (options: MeasureOptions) => {
@@ -87,12 +92,18 @@ const measure = (options: MeasureOptions) => {
 
     const inRange = () => container.offsetHeight < maxHeight;
 
+    const exit = (result: Result) => {
+        document.body.removeChild(container);
+        return result;
+    };
+
+    console.log(maxHeight, container.offsetHeight);
     // 1. if it's in range, it's not need to be computed.
     if(inRange()) {
-        return {
+        return exit({
             isEllipsis: false,
             text: container.innerHTML,
-        };
+        });
     }
 
     const contentNodes = cloneChildNodes(container.childNodes[0]);
@@ -160,14 +171,16 @@ const measure = (options: MeasureOptions) => {
         };
     };
 
+    console.log(contentNodes);
     contentNodes.some((node, index) => {
         const {finished} = measureNode(node, index);
         return finished;
     });
 
-    return {
+    return exit({
+        isEllipsis: true,
         text: container.innerHTML,
-    };
+    });
 };
 
 export {

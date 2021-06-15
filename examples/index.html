@@ -13,8 +13,9 @@
         }
 
         section > div {
-            background: pink;
             color: darkcyan;
+            border: 1px solid rgba(0, 0, 0, 0.2);
+            box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.2);
         }
 
         section > div + div{
@@ -25,11 +26,24 @@
 <body>
     <!--  使用 css 的省略号不能使用高度  -->
     <section style="width: 100%;">
-        <div id="ellipsis1" style="line-height: 18px;">
+        <div id="ellipsis1">
             这是css3的一个正常的一行折叠 这是一个正常的一行折叠 这是一个正常的一行折叠 这是一个正常的一行折叠 这是一个正常的一行折叠 这是一个正常的一行折叠 这是一个正常的一行折叠
         </div>
-        <div id="ellipsis2" style="line-height: 18px;">
+        <div id="ellipsis2">
             这是css3的一个正常的两行折叠 这是一个正常的两行折叠 这是一个正常的两行折叠 这是一个正常的两行折叠 这是一个正常的两行折叠 这是一个正常的两行折叠 这是一个正常的两行折叠
+        </div>
+
+        <div id="ellipsis3">
+            <span style="color: darkgoldenrod">我是前缀</span>
+            这是带着前缀的 css3 的两行折叠 这是带着前缀的 css3 的两行折叠这是带着前缀的 css3 的两行折叠这是带着前缀的 css3 的两行折叠这是带着前缀的 css3 的两行折叠这是带着前缀的 css3 的两行折叠
+        </div>
+
+        <div id="ellipsis4" style="line-height: 18px;">
+            这是带着后缀的js折叠 这是带着后缀的js折叠 这是带着后缀的js折叠 这是带着后缀的js折叠 这是带着后缀的js折叠 这是带着后缀的js折叠 这是带着后缀的js折叠 这是带着后缀的js折叠 这是带着后缀的js折叠
+        </div>
+
+        <div id="ellipsis5" style="line-height: 18px;">
+
         </div>
 <!--        无奈撒打算打算大啊啊的啊的啊多少啊无奈撒打算打算大啊啊的啊的啊多少啊无奈撒打算打算大啊啊的啊的啊多少啊-->
 <!--        <div id="ellipsis2">-->
@@ -44,11 +58,19 @@
         ellipsis({target: document.querySelector('#ellipsis1'), rows: 1})
         // 两行折叠
         ellipsis({target: document.querySelector('#ellipsis2')})
-
-        // const content2 = createEllipsis({
-        //     el: document.querySelector('#ellipsis2'),
-        //     rows: 2,
-        // })
+        // 带前缀的css折叠
+        ellipsis({target: document.querySelector('#ellipsis3')})
+        // 带后缀的两行折叠
+        ellipsis({
+            target: document.querySelector('#ellipsis4'),
+            suffix: '<span style="color: darkgoldenrod">我是后缀</span>',
+        })
+        // 这是自己注入 content，设置好高度从而不触发重排的方案。
+        ellipsis({
+            target: document.querySelector('#ellipsis5'),
+            content: '这是带着后缀的，自己注入 content。这是带着后缀的，自己注入 content。这是带着后缀的，自己注入 content。这是带着后缀的，自己注入 content。这是带着后缀的，自己注入 content。',
+            suffix: '<span style="color: darkgoldenrod">我是后缀</span>',
+        })
     </script>
 </body>
 </html>
